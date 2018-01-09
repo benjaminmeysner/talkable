@@ -1,37 +1,62 @@
 package com.tlkble.controller;
 
+import java.security.Principal;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tlkble.domain.Event;
 import com.tlkble.domain.User;
+import com.tlkble.services.UserService;
 
 @Controller
 public class IndexController {
-	
-	//index page mapping
-    @RequestMapping("/")
-    public String index(Model model) {   	
-    	//something?      
-    	
-    	//Required for index model handling & dynamic attributes
-    	model.addAttribute("currentDate", new Date());
+
+	@Autowired
+	UserService userService;
+
+	@RequestMapping("/")
+	@Secured("ROLE_USER")
+	public String root_redirect(Model model) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			return "redirect:/user/home";
+		} else
+			return "login";
+	}
+
+	@RequestMapping("/user/home")
+	@Secured("ROLE_USER")
+	public String index(Model model, Principal principal) {
+
+		/**
+		 * Get the current logged in user from principal and add it to the model
+		 */
+		User user = (User) ((Authentication) principal).getPrincipal();
+		System.out.println("I MAKE IT HERE");
+		if (user != null) {
+			model.addAttribute("currentDate", new Date());
+			model.addAttribute("user", user);
+			model.addAttribute("event", new Event());
+			return "index";
+		}
+		System.out.println("I'M NULL");
+		return null;
+	}
+
+	@RequestMapping("/register")
+	public String register(Model model) {
+
 		model.addAttribute("user", new User());
-		model.addAttribute("event", new Event());
-        return "index";
-    }
-    
-	//register page mapping
-    @RequestMapping("/register")
-    public String register(Model model) {   	
-    	//something?   
-    	
-    	//Required for index registration handling
-		model.addAttribute("user", new User());
-        return "register";
-    }
+		return "register_";
+	}
 
 }

@@ -9,17 +9,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
-//--------------------------------- //
-//-- Handling login form failure -- //
-//--------------------------------- //
+/**
+ * CustomAuthenticationFailureHandler
+ * @author Ben
+ * @issues none
+ */
 
 @Component
 public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 	                                    AuthenticationException exception) throws IOException, ServletException {
-		request.getSession().setAttribute("error", exception.getMessage());
-		System.out.println("reaches here.....");
+		request.getSession().setAttribute("error", "xxxx");
+		System.out.println("failure handler");
+		getRedirectStrategy().sendRedirect(request, response, "/login");
 	}
 }

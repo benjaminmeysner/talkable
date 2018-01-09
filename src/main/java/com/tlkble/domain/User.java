@@ -1,5 +1,6 @@
 package com.tlkble.domain;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -32,13 +33,19 @@ import lombok.Setter;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonSerialize
 public class User {
-
+	/* Personal Data */
 	@Getter @Setter private String firstName;
 	@Getter @Setter private String lastName;
 	@Getter @Setter @Indexed(name="emailAddress", unique=true) private String emailAddress;
-	@Getter @Setter @Indexed(name="username", unique=true) private String username;
+	@Id @Getter @Setter @Indexed(name="username") private String username;
 	@Getter @Setter @JsonIgnore private String password;
+	@Getter @Setter @JsonIgnore private String passwordCloak;
 	@Getter @Setter @JsonIgnore private String role;
+	/* Event Data */
+	@Getter @Setter private int eventsCreated;
+	@Getter @Setter private int eventsJoined;
+	@Getter @Setter private int messagesSent;
+	
 	
 	@PersistenceConstructor
 	public User(String firstName, String lastName, String emailAddress, String username, String password) {

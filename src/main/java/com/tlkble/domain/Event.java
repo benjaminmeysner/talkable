@@ -20,21 +20,20 @@ import lombok.Setter;
  */
 
 @Document(collection="events")
-@Getter
-@Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonSerialize
 public class Event {
 
-	private String id;
-	private String eventTitle;
-	private String eventDescription;
-	private String eventDate;
-	private String eventStartTime;
-	private String eventFinishTime;
-	private boolean isAlive;
+	@Getter @Setter private String id;
+	@Getter @Setter private String eventTitle;
+	@Getter @Setter private String eventDescription;
+	@Getter @Setter private String eventDate;
+	@Getter @Setter private String eventStartTime;
+	@Getter @Setter private String eventFinishTime;
+	@Getter @Setter private String creator;
+	@Getter @Setter private boolean isAlive;
 	
 	public Event (String id, String eventTitle, String eventDescription) {
 		this.id = id;

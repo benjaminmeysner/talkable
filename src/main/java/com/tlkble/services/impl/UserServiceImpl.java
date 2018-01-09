@@ -3,8 +3,10 @@ package com.tlkble.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.tlkble.domain.User;
 import com.tlkble.repository.UserRepository;
 import com.tlkble.services.UserService;
+import com.tlkble.util.PasswordCloak;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,19 +24,71 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepo;
 
-	// User register service
+	PasswordCloak cloaker;
+
 	@Override
 	public User register(User user) {
-		// Encrypt password using BCrypt
+
+		/**
+		 * Server-side user validation checks 1. Validating any blank fields. Does not
+		 * cater for white spaces Fields must be fully white-space
+		 * 
+		 * 2. Check for appearances of white space. Cannot appear anywhere inside string
+		 * 
+		 * 3. Pattern Match Email REGEX
+		 * 
+		 * 4. Pattern Match Username Format
+		 * 
+		 * 5. Pattern Match Password Format
+		 * 
+		 * Otherwise save the new user
+		 */
+
+		/* 1 */
+		if (StringUtils.isBlank(user.getFirstName()) || StringUtils.isBlank(user.getLastName())
+				|| StringUtils.isBlank(user.getEmailAddress()) || StringUtils.isBlank(user.getUsername())
+				|| StringUtils.isBlank(user.getPassword())) {
+			return null;
+		}
+
+		/* 2 */
+		if (StringUtils.containsWhitespace(user.getFirstName()) || StringUtils.containsWhitespace(user.getLastName())
+				|| StringUtils.containsWhitespace(user.getEmailAddress())
+				|| StringUtils.containsWhitespace(user.getUsername())
+				|| StringUtils.containsWhitespace(user.getPassword())) {
+			return null;
+		}
+
+		/* 3 */
+		if (!user.getEmailAddress().matches(
+				"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"))
+			return null;
+
+		/* 4 */
+		if (!user.getUsername().matches("(?=^.{5,10}$)^[a-zA-Z][a-zA-Z0-9]*[._-]?[a-zA-Z0-9]+$"))
+			return null;
+
+		/* 5 */
+		if (!user.getPassword().matches("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&amp;])[A-Za-z\\d$@$!%*#?&amp;]{8,}$"))
+			return null;
+
+		/**
+		 * Save new user to repository Encrypt passwords and set both emailaddress and
+		 * username to lowercase
+		 */
+		user.setPasswordCloak(PasswordCloak.cloakPassword(user.getPassword()));
 		user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
-		// for ignoring case sensitivity
 		user.setEmailAddress(user.getEmailAddress().toLowerCase());
 		user.setUsername(user.getUsername().toLowerCase());
 		user.setRole("ROLE_USER");
 		return userRepo.save(user);
 	}
 
-	// Find user by email address
+	/**
+	 * Check if user exists
+	 * 
+	 * @return boolean
+	 */
 	public Boolean existsByEmailAddress(String emailAddress) {
 		User user = userRepo.findByEmailAddressIgnoreCase(emailAddress);
 		if (user != null)
@@ -42,7 +97,11 @@ public class UserServiceImpl implements UserService {
 			return false;
 	}
 
-	// Find user by username
+	/**
+	 * Check if a user exists by username
+	 * 
+	 * @return boolean
+	 */
 	public Boolean existsByUsername(String username) {
 		User user = userRepo.findByUsernameIgnoreCase(username);
 		if (user != null)
@@ -51,7 +110,28 @@ public class UserServiceImpl implements UserService {
 			return false;
 	}
 
-	// Spring security AJAX Stuff
+	/**
+	 * Return list of all users
+	 * 
+	 * @return user
+	 */
+	public List<User> getAllUsers() {
+		return userRepo.findAll();
+	}
+
+	public User findByUsername(String username) {
+		User user = userRepo.findByUsernameIgnoreCase(username);
+		if (user != null) {
+			return user;
+		}
+		;
+		return null;
+	}
+
+	public User findByEmailAddress(String emailAddress) {
+		return userRepo.findByEmailAddressIgnoreCase(emailAddress);
+	}
+
 	@Override
 	public Boolean checkPassword(String rqPassword, String dbPassword) {
 		try {
@@ -62,16 +142,6 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-	// Return the list of users available
-	public List<User> getAllUsers() {
-		return userRepo.findAll();
-	}
-
-	// Find user by username
-	public User findByUsername(String username) {
-		return userRepo.findByUsername(username);
 	}
 
 	@Override
@@ -85,12 +155,19 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getCurrentLoginUser() {
-		if (SecurityContextHolder.getContext().getAuthentication() != null) {
-			if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof User) {
-				return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			}
+	public void update(User user) {
+		this.userRepo.save(user);
+	}
+
+	@Override
+	public User getCurrentUser() {
+		
+		Authentication a = SecurityContextHolder.getContext().getAuthentication();
+		User currentUser = (User)a.getPrincipal();
+		if (currentUser != null) {
+			return currentUser;
 		}
+
 		return null;
 	}
 }

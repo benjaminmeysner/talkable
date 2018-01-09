@@ -30,7 +30,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
 	@Override
 	public Mongo mongo() throws Exception {		
-		MongoCredential credential = MongoCredential.createCredential("ben", "tlkble", "wrongpass".toCharArray());
+		MongoCredential credential = MongoCredential.createCredential("ben", "tlkble", "badluck".toCharArray());
 		return new MongoClient((new ServerAddress("ds145275.mlab.com:45275")), Arrays.asList(credential));
 	}
 	  
