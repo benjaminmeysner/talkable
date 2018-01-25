@@ -41,14 +41,12 @@ public class IndexController {
 		 * Get the current logged in user from principal and add it to the model
 		 */
 		User user = (User) ((Authentication) principal).getPrincipal();
-		System.out.println("I MAKE IT HERE");
 		if (user != null) {
 			model.addAttribute("currentDate", new Date());
 			model.addAttribute("user", user);
 			model.addAttribute("event", new Event());
 			return "index";
 		}
-		System.out.println("I'M NULL");
 		return null;
 	}
 

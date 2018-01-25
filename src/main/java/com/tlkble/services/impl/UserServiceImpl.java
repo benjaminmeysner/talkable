@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +24,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserRepository userRepo;
+
+	@Autowired
+	SimpUserRegistry simpUserRegistry;
 
 	PasswordCloak cloaker;
 
@@ -161,13 +165,18 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getCurrentUser() {
-		
+
 		Authentication a = SecurityContextHolder.getContext().getAuthentication();
-		User currentUser = (User)a.getPrincipal();
+		User currentUser = (User) a.getPrincipal();
 		if (currentUser != null) {
 			return currentUser;
 		}
 
 		return null;
+	}
+
+	@Override
+	public void getUsersConnectedToEvent() {
+		simpUserRegistry.getUsers().stream().filter(u -> u instanceof User);
 	}
 }

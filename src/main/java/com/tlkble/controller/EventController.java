@@ -21,8 +21,7 @@ import com.tlkble.services.UserService;
 import com.tlkble.util.EventDateTimeFormat;
 
 /**
- * Event Controller ================ Controls actions related to event handling,
- * creating deleting etc.
+ * Event Controller
  * 
  * @author Ben
  *
@@ -44,10 +43,9 @@ public class EventController {
 
 		Event event = eventService.findEventById(eventId);
 
-		if (event == null) { /* throw errors */
+		if (event == null) {
 			return "";
 		} else {
-			/* set the events joined count */
 			User user = (User) ((Authentication) principal).getPrincipal();
 
 			if (user != null) {
@@ -55,12 +53,16 @@ public class EventController {
 				userService.update(user);
 			}
 
+			// Stuff - Needs tidying
+			model.addAttribute("currentloggedInUser", user);
+			model.addAttribute("loggedInUsername", user.getUsername());
 			model.addAttribute("eventTitle", event.getEventTitle());
 			model.addAttribute("eventDescription", event.getEventDescription());
 			model.addAttribute("eventId", event.getId());
 			model.addAttribute("eventDate", event.getEventDate());
 			model.addAttribute("eventStartTime", event.getEventStartTime());
 			model.addAttribute("isAlive", event.isAlive());
+			model.addAttribute("eventCreator", event.getCreator());
 			model.addAttribute("event", new Event());
 		}
 		return "event";
@@ -76,20 +78,29 @@ public class EventController {
 	@RequestMapping(value = "/event/new", method = RequestMethod.POST)
 	public String eventCreate(@RequestBody @ModelAttribute("event") Event event, Model model, Principal principal) {
 
+		// Set chrono stats
 		edtf = new EventDateTimeFormat();
 		event.setEventDate(edtf.dateFormat(new Date()));
 		event.setEventStartTime(edtf.timeFormat(LocalTime.now()));
 		event.setAlive(true);
 
-		/* set event creator from user principal */
+		// Update User stats
 		User user = (User) ((Authentication) principal).getPrincipal();
 		if (user != null) {
 			event.setCreator(user.getUsername());
 			user.setEventsCreated(user.getEventsCreated() + 1);
 			userService.update(user);
-			/* return error, authentication issue */
 		} else
 			return null;
+
+		// Set Quick title
+		if (event.getEventTitle().isEmpty()) {
+			event.setEventTitle("Quick Event");
+		}
+		// Set Quick description
+		if (event.getEventDescription().isEmpty()) {
+			event.setEventDescription("This is a quick event. No description was entered.");
+		}
 
 		eventService.createEvent(event);
 		model.addAttribute("event", new Event());

@@ -45,6 +45,7 @@ public class User {
 	@Getter @Setter private int eventsCreated;
 	@Getter @Setter private int eventsJoined;
 	@Getter @Setter private int messagesSent;
+	@Getter @Setter private String lastMessageSent;
 	
 	
 	@PersistenceConstructor

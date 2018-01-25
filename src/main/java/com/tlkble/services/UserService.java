@@ -35,4 +35,6 @@ public interface UserService {
 	void update(User user);
 	
 	User getCurrentUser();
+	
+	void getUsersConnectedToEvent();
 }

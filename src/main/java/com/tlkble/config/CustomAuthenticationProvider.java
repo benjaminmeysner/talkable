@@ -39,8 +39,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			throw new BadCredentialsException("#bad-credentials");
 		}
 		
-		System.out.println(user.getUsername() + " <<<<<<<<<<<<<<<");
-		
 		/* When user is not null
 		 * check username equals
 		 * the registered name

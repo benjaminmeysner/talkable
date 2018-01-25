@@ -20,26 +20,24 @@ import com.tlkble.services.UserService;
 
 @Controller
 public class RegisterController {
-	
+
 	@Autowired
 	UserService userService;
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String createUser(@Valid @ModelAttribute("user") User user) {
 		Object response = this.userService.register(user);
-		if(response != null) {
-			
-
+		if (response != null) {
 			userService.register(user);
-			
+
 			/* Login user on successful registration */
-			
+
 			List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 			authorities.add(new SimpleGrantedAuthority(user.getRole().toUpperCase()));
-			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, "N/A",
-					authorities);
+			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user,
+					"N/A", authorities);
 			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-			
+
 			return "redirect:/user/home";
 		}
 		return null;
