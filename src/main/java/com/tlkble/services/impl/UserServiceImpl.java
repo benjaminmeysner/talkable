@@ -174,9 +174,4 @@ public class UserServiceImpl implements UserService {
 
 		return null;
 	}
-
-	@Override
-	public void getUsersConnectedToEvent() {
-		simpUserRegistry.getUsers().stream().filter(u -> u instanceof User);
-	}
 }
