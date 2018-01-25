@@ -6,4 +6,4 @@ addons:
       - oracle-java8-installer
 script:
   - jdk_switcher use oraclejdk8
-  - mvn package -Dmaven.test.skip=true
+  - mvn package -DskipTests=true
