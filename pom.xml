@@ -93,6 +93,14 @@
     		<artifactId>thymeleaf-extras-springsecurity4</artifactId>
    			 <version>3.0.2.RELEASE</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>	
+		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-test -->
+		<dependency>
+  		  <groupId>org.springframework.security</groupId>
+   		 <artifactId>spring-security-test</artifactId>
+  		  <version>4.0.4.RELEASE</version>
+  		  <scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
