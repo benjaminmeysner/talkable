@@ -1,9 +1,9 @@
 language: java
-sudo: false
+jdk: oraclejdk7
+
 addons:
   apt:
     packages:
       - oracle-java8-installer
 script:
   - jdk_switcher use oraclejdk8
-  - mvn package -DskipTests=true
