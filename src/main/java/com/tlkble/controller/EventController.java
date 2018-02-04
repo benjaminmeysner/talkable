@@ -89,6 +89,7 @@ public class EventController {
 		if (user != null) {
 			event.setCreator(user.getUsername());
 			user.setEventsCreated(user.getEventsCreated() + 1);
+			event.getUsers().add(user.getUsername());
 			userService.update(user);
 		} else
 			return null;

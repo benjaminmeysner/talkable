@@ -1,5 +1,8 @@
 package com.tlkble.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,6 +37,7 @@ public class Event {
 	@Getter @Setter private String eventFinishTime;
 	@Getter @Setter private String creator;
 	@Getter @Setter private boolean isAlive;
+	@Getter @Setter List<String> users = new ArrayList<String>();
 	
 	public Event (String id, String eventTitle, String eventDescription) {
 		this.id = id;

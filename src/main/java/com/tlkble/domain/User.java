@@ -1,9 +1,12 @@
 package com.tlkble.domain;
 
+import java.util.Collection;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -57,5 +60,16 @@ public class User {
 		this.username = username;
 		this.password = password;
 	}
+
+	public boolean isEnabled() {
+		return true;
+	}
+
+	public User(String username2, String password2, boolean b, boolean c, boolean d,
+			Collection<? extends GrantedAuthority> authorities) {
+		// TODO Auto-generated constructor stub
+	}
 }
+
+
 

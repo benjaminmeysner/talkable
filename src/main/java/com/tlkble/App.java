@@ -20,4 +20,18 @@ public class App {
     {
         SpringApplication.run(App.class, args);
     }
+
+    @Bean
+    public CommandLineRunner administrators(ApplicationContext ctx) {
+        return args -> {  
+        	
+        	/**================= 
+        	 * Run boot commands
+        	 * ==================
+        	 * 	mvn package -Dmaven.test.skip=true
+        	 *  SKIP MAVEN TESTS
+        	 */
+
+        };
+    }
 }

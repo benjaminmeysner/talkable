@@ -35,6 +35,11 @@ public class BotServiceImpl implements BotService {
 				containsProfanity = true;
 			}
 
+			for (int i = 0; i < profanityList.get_words().size(); i++) {
+				if (word.contains(profanityList.get_words().get(i))) {
+					containsProfanity = true;
+				}
+			}
 		}
 		return containsProfanity;
 	}
@@ -44,7 +49,10 @@ public class BotServiceImpl implements BotService {
 		String[] message_words_ = message.getText().split("\\s+");
 
 		for (int i = 0; i < message_words_.length; i++) {
+
 			for (int k = 0; k < profanityList.get_words().size(); k++) {
+
+				// If expletive IS the current word
 				if (message_words_[i].equals(profanityList.get_words().get(k))) {
 
 					char prefix_, suffix_;
@@ -64,13 +72,16 @@ public class BotServiceImpl implements BotService {
 					message_words_[i] = String.valueOf(cloaked_word_);
 				}
 			}
-		};
-		
-		String output = "";		
-		for(int i = 0; i < message_words_.length; i++) {
+		}
+		;
+
+		String output = "";
+		for (int i = 0; i < message_words_.length; i++) {
 			output = output + message_words_[i] + " ";
 		}
-		
+
+		output = output.substring(0, output.length() - 1);
+
 		return output;
 	}
 
@@ -80,15 +91,15 @@ public class BotServiceImpl implements BotService {
 		boolean isSpam = false;
 
 		System.out.println(user.getLastMessageSent() + " :: last message sent");
-		
+
 		// Current minutes
 		String time = new SimpleDateFormat("HH:mm").format(new Date());
 		String[] current_split = time.split(":");
 		int currentMinutes = Integer.parseInt(current_split[1]);
-		
+
 		System.out.println(time + " :: current time");
 
-		// First message		
+		// First message
 		String[] message_split = user.getLastMessageSent().split(":");
 		int messageMinutes = Integer.parseInt(message_split[1]);
 
