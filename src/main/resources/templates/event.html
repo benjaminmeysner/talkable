@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<title>TALKABLE</title>
+<meta name="description"
+	content="The description should optimally be between 150-160 characters."></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<meta name="author" content="Madeon08"></meta>
+<!-- Security Required -->
+<meta name="_csrf" content="${_csrf.token}" />
+<meta name="_csrf_header" content="${_csrf.headerName}" />
+
+<!-- ================= Favicon ================== -->
+<!-- Standard -->
+<link rel="shortcut icon" href="img/favicon.png"></link>
+<!-- Retina iPad Touch Icon-->
+<link rel="apple-touch-icon" sizes="144x144"
+	href="/img/favicon-retina-ipad.png"></link>
+<!-- Retina iPhone Touch Icon-->
+<link rel="apple-touch-icon" sizes="114x114"
+	href="/img/favicon-retina-iphone.png"></link>
+<!-- Standard iPad Touch Icon-->
+<link rel="apple-touch-icon" sizes="72x72"
+	href="/img/favicon-standard-ipad.png"></link>
+<!-- Standard iPhone Touch Icon-->
+<link rel="apple-touch-icon" sizes="57x57"
+	href="/img/favicon-standard-iphone.png"></link>
+
+<!-- ============== Resources style ============== -->
+<link rel="stylesheet" th:href="@{/css/style-event.css}"></link>
+<link rel="stylesheet" th:href="@{/css/animate.css}"></link>
+
+<!-- Modernizr #1d1d23runs quickly on page load to detect features -->
+<script src="js/modernizr.custom.js"></script>
+</head>
+
+<body onload="connect()">
+
+	<!-- Page preloader -->
+	<div id="loading">
+		<div id="preloader">
+			<span></span> <span></span>
+		</div>
+	</div>
+
+	<!-- Overlay and Star effect -->
+	<div class="global-overlay"
+		style="opacity: 1; transform: translateX(100%);">
+		<div class="overlay">
+
+			<div id="stars"></div>
+			<div id="stars2"></div>
+			<div id="stars3"></div>
+
+		</div>
+	</div>
+
+	<!-- START - Home/Left Part -->
+	<section id="left-side">
+
+		<!-- Your logo -->
+		<img src="/img/logo.png" alt="" class="brand-logo" />
+
+		<!--  EVENT IS RUNNING -->
+		<div class="content" th:if="${isAlive}">
+			<h1 class="text-intro opacity-0">
+				<p class="eventId" th:text="${eventId}"></p>
+			</h1>
+			<h1 class="text-intro opacity-0" th:text="${eventTitle}"></h1>
+			<h2 class="text-intro opacity-0"></h2>
+			<h2 class="text-intro opacity-0"></h2>
+			<nav>
+				<ul>
+					<li>
+						<div th:if="${eventCreator} == ${loggedInUsername}">
+							<a th:href="@{/event/} + ${eventId} + @{/end}"
+							class="light-btn text-intro opacity-0" onClick="disconnect()">END EVENT</a>					
+						</div>
+					</li>
+					<li>
+						<div th:unless="${eventCreator} == ${loggedInUsername}">
+							<a th:href="@{/}"
+							class="light-btn text-intro opacity-0" onClick="disconnect()">LEAVE EVENT</a>					
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+		<!--  EVENT IS NOT RUNNING -->
+		<div class="content" th:unless="${isAlive}">
+			<h1 class="text-intro opacity-0">
+				<p class="eventId" th:text="${eventId}" id="eventIdStomp"
+					name="eventIdStomp">eventId</p>
+			</h1>
+			<h1 class="text-intro opacity-0">This event has now finished.</h1>
+			<nav>
+				<ul>
+
+					<li><a th:href="@{/}" class="light-btn text-intro opacity-0">HOME</a>
+					</li>
+
+					<li></li>
+				</ul>
+			</nav>
+		</div>
+
+		<!-- Social icons -->
+		<div class="social-icons">
+			<a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i
+				class="fa fa-twitter"></i></a> <a href="#"><i
+				class="fa fa-google-plus"></i></a> <a href="#"><i
+				class="fa fa-linkedin"></i></a>
+		</div>
+
+	</section>
+	<!-- END - Home/Left Part -->
+
+	<!-- START - More Informations/Right Part -->
+	<section id="right-side">
+
+		<div class="content" id="content">
+
+			<h3>You've Connected. Welcome to</h3>
+			<h3 th:text="${eventTitle}"></h3>
+
+			<p>
+				You've successfully joined your event, make sure you give the
+				guidelines a read before you post to make sure everyone has a
+				pleasant experience using this tool. Once you've done it you may
+				select a username and make a post. This is a demo version for now
+				and takes the username as an input! Usernames will be taken from
+				Principal in future.<br> <br /> <b>Posting as </b>
+			<h2 th:text="${currentloggedInUser.username}"></h2>
+
+			<div class="row">
+				<!-- MESSAGE -->
+				<div class="form col-lg-12">
+					<div class="form form-group">
+						<textarea name="message" id="text" class="form form-control"
+							placeholder="Where does your journey of discovery take you today?"></textarea>
+						<div class="help-block with-errors"></div>
+					</div>
+				</div>
+
+			</div>
+			<button id="sendMessage" onclick="sendMessage();"
+				class="btn btn-lg submit">LET'S TALK</button>
+			<br> <br>
+
+
+
+			<!-- END - Contact Form -->
+			<!-- EVENT MESSAGE AREA -->
+			<div id="event_msgs"></div>
+			<div id="response"></div>
+			<!--  END EVENT MESSAGE AREA -->
+
+			<p class="TCS">
+				By clicking <b>"SEND MESSAGE"</b> you are agreeing to our <b>Terms
+					and Conditions</b> and <b>Privacy Policy</b>, which are written below,
+				please give them a read!<br> <br> 1. YOUR AGREEMENT By
+				using this Site, you agree to be bound by, and to comply with, these
+				Terms and Conditions. If you do not agree to these Terms and
+				Conditions, please do not use this site. PLEASE NOTE: We reserve the
+				right, at our sole discretion, to change, modify or otherwise alter
+				these Terms and Conditions at any time. Unless otherwise indicated,
+				amendments will become effective immediately. Please review these
+				Terms and Conditions periodically. Your continued use of the Site
+				following the posting of changes and/or modifications will
+				constitute your acceptance of the revised Terms and Conditions and
+				the reasonableness of these standards for notice of changes. For
+				your information, this page was last updated as of the date at the
+				top of these terms and conditions. 2. PRIVACY Please review our
+				Privacy Policy, which also governs your visit to this Site, to
+				understand our practices. 3. LINKED SITES This Site may contain
+				links to other independent third-party Web sites ("Linked Sites”).
+				These Linked Sites are provided solely as a convenience to our
+				visitors. Such Linked Sites are not under our control, and we are
+				not responsible for and does not endorse the content of such Linked
+				Sites, including any information or materials contained on such
+				Linked Sites. You will need to make your own independent judgment
+				regarding your interaction with these Linked Sites. 4. FORWARD
+				LOOKING STATEMENTS All materials reproduced on this site speak as of
+				the original date of publication or filing. The fact that a document
+				is available on this site does not mean that the information
+				contained in such document has not been modified or superseded by
+				events or by a subsequent document or filing. We have no duty or
+				policy to update any information or statements contained on this
+				site and, therefore, such information or statements should not be
+				relied upon as being current as of the date you access this site.
+			</p>
+			</br>
+
+		</div>
+		<!-- /. Content -->
+		<footer>
+
+			<p>© TALKABLE - BENJAMIN THOMAS MEYSNER - UNIVERSITY OF LEICESTER</p>
+
+		</footer>
+
+	</section>
+	<!-- START - More Informations/Right Part -->
+
+	<!-- Button Cross to close the More Informations/Right Part -->
+	<button id="close-more-info" class="hide-close">
+		<i class="icon ion-ios-close-outline"></i>
+	</button>
+
+	<!-- Root element of PhotoSwipe, the gallery. Must have class pswp. -->
+	<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+		<!-- Background of PhotoSwipe. 
+	        	It's a separate element as animating opacity is faster than rgba(). -->
+		<div class="pswp__bg"></div>
+
+		<!-- Slides wrapper with overflow:hidden. -->
+		<div class="pswp__scroll-wrap">
+
+			<!-- Container that holds slides. 
+		            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+		            Don't modify these 3 pswp__item elements, data is added later on. -->
+			<div class="pswp__container">
+				<div class="pswp__item"></div>
+				<div class="pswp__item"></div>
+				<div class="pswp__item"></div>
+			</div>
+
+			<!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+			<div class="pswp__ui pswp__ui--hidden">
+
+				<div class="pswp__top-bar">
+
+					<!--  Controls are self-explanatory. Order can be changed. -->
+
+					<div class="pswp__counter"></div>
+
+					<button class="pswp__button pswp__button--close"
+						title="Close (Esc)"></button>
+
+					<button class="pswp__button pswp__button--share" title="Share"></button>
+
+					<button class="pswp__button pswp__button--fs"
+						title="Toggle fullscreen"></button>
+
+					<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+
+					<div class="pswp__preloader">
+						<div class="pswp__preloader__icn">
+							<div class="pswp__preloader__cut">
+								<div class="pswp__preloader__donut"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div
+					class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+					<div class="pswp__share-tooltip"></div>
+				</div>
+
+				<button class="pswp__button pswp__button--arrow--left"
+					title="Previous (arrow left)"></button>
+
+				<button class="pswp__button pswp__button--arrow--right"
+					title="Next (arrow right)"></button>
+
+				<div class="pswp__caption">
+					<div class="pswp__caption__center"></div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- /. Root element of PhotoSwipe. Must have class pswp. -->
+
+	<!-- STOMP / SOCKJS -->
+	<script th:inline="javascript" type="text/javascript">
+    var stompClient = null;
+    
+    /*<![CDATA[*/
+	var eventIdStomp = [[${eventId}]];
+	var from = [[${currentloggedInUser.username}]];
+	/*]]>*/
+     
+    function setConnected(connected) {
+        document.getElementById('connect').disabled = connected;
+        document.getElementById('disconnect').disabled = !connected;
+        document.getElementById('conversationDiv').style.visibility 
+          = connected ? 'visible' : 'hidden';
+        document.getElementById('response').innerHTML = '';
+    }
+     
+    function connect() {
+        var socket = new SockJS('/events');
+        stompClient = Stomp.over(socket);  
+        stompClient.connect({}, function(frame) {
+        	
+            console.log('Connected: ' + frame);
+            
+            stompClient.subscribe("/user/queue/reply", function(responseOutput) {
+            	if(responseOutput != null) {
+            		showMessageOutput(JSON.parse(responseOutput.body));
+            	};
+            });
+       
+            stompClient.subscribe('/topic/' + eventIdStomp, function(messageOutput) {
+                showMessageOutput(JSON.parse(messageOutput.body));
+            });
+        });
+    }
+     
+    function disconnect() {
+        if(stompClient != null) {
+            stompClient.disconnect();
+        }
+    }
+     
+    function sendMessage() {
+        var text = document.getElementById('text').value;
+        stompClient.send("/app/events/bot_reply", {}, 
+          JSON.stringify({'from':from, 'text':text}));
+        stompClient.send("/app/events/" + eventIdStomp, {}, 
+          JSON.stringify({'from':from, 'text':text}));  
+    }
+     
+    // Create individuals divs for each message
+    function showMessageOutput(messageOutput) {      
+        var message_divs = document.getElementById('content');
+        // Linebreak
+        var linebreak = document.createElement("br");
+		// Div for the whole message 
+        var div = document.createElement('div');
+        // Inner Div for the author on the left
+        var author_left = document.createElement('div');
+        // Inner Div for the message in middle
+        var message_right = document.createElement('div');
+        var time = document.createElement('div');
+        var parent = document.getElementById('event_msgs');
+        var eventIdDiv = document.createElement('div');
+        
+        
+        //Div stylings
+        div.className = "event-message animated bounceIn";
+        div.style.wordWrap = 'break-word';
+        div.style.padding = "15px 15px 15px 15px";
+        
+        if(messageOutput.author == 'TALKBOT') {
+            div.style.background = "#f5e1e1";
+            div.style.borderLeft = "6px solid #d75555"
+        } else {
+            div.style.background = "#fff";
+            div.style.borderLeft = "6px solid #abd755";
+        }
+        div.style.border = "1px dotted #dddddd";
+        div.style.minHeight = "auto";
+        div.style.overflow = "hidden";
+
+        
+        //Testings
+        console.log(messageOutput.author + " : " + messageOutput.message);
+        
+        time.appendChild(document.createTextNode(messageOutput.time + " "));
+        time.className = "time";
+        time.style.fontWeight = '100';
+        time.style.fontSize = '12px';
+        
+        eventIdDiv.appendChild(document.createTextNode("EID: " + eventIdStomp));
+        eventIdDiv.className = "eventIdDiv";
+        eventIdDiv.style.fontWeight = '100';
+        eventIdDiv.style.fontSize = '12px';
+                
+        // Append author to div and style
+        if(messageOutput.author == 'TALKBOT') {
+        	
+            author_left.appendChild(document.createTextNode(messageOutput.author + " "));
+            author_left.appendChild(document.createElement("br"));
+            author_left.appendChild(time); 
+            author_left.appendChild(document.createElement("br"));
+            //append event id and message id
+            author_left.appendChild(eventIdDiv);
+            
+            author_left.className = "author";
+            author_left.style.fontWeight = '800';
+            author_left.style.cssFloat = 'left';
+            author_left.style.width = '20%';
+            author_left.style.height = '100%';
+            author_left.style.background = '#f5e1e1';
+            author_left.style.fontSize = '14px';
+        	
+        } else {
+        	
+            author_left.appendChild(document.createTextNode(messageOutput.author + " "));
+            author_left.appendChild(document.createElement("br"));
+            author_left.appendChild(time); 
+            author_left.appendChild(document.createElement("br"));
+            //append event id and message id
+            author_left.appendChild(eventIdDiv);
+            
+            author_left.className = "author";
+            author_left.style.fontWeight = '800';
+            author_left.style.cssFloat = 'left';
+            author_left.style.width = '20%';
+            author_left.style.height = '100%';
+            author_left.style.background = '#fff';
+            author_left.style.fontSize = '14px';
+        	
+        }
+        
+        message_right.appendChild(document.createTextNode(messageOutput.message));
+        message_right.className = "messageBlock";
+        message_right.style.height = '100%';
+        //message_right.style.paddingLeft = '22%';
+        message_right.style.paddingRight = '0px';
+        message_right.style.fontSize = '14px';
+        message_right.style.overflow = "hidden";
+        
+        
+        div.appendChild(author_left);
+        div.appendChild(linebreak);        
+        div.appendChild(message_right);
+        
+        //newest messages on top
+        message_divs.insertBefore(linebreak, parent.nextSibling);
+        message_divs.insertBefore(div, parent.nextSibling);
+    }
+    
+	</script>
+	<!-- END STOMP / SOCKJS -->
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+	<script src="/js/stomp.js"></script>
+
+
+	<!-- ///////////////////\\\\\\\\\\\\\\\\\\\ -->
+	<!-- ********** Resources jQuery ********** -->
+	<!-- \\\\\\\\\\\\\\\\\\\/////////////////// -->
+
+	<!-- * Libraries jQuery, Easing and Bootstrap - Be careful to not remove them * -->
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/jquery.easings.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+
+	<!-- Unique Event ID Generator -->
+	<script src="/js/eventIdGenerator.js"></script>
+
+	<!-- AJAX login plugin -->
+	<script src="/js/login.js"></script>
+
+	<!-- PhotoSwipe Core JS file -->
+	<script src="/js/velocity.min.js"></script>
+
+	<!-- PhotoSwipe UI JS file -->
+	<script src="/js/velocity.ui.min.js"></script>
+
+	<!-- Newsletter plugin -->
+	<script src="/js/notifyMe.js"></script>
+
+	<!-- Contact form plugin -->
+	<script src="/js/contact-me.js"></script>
+
+	<!-- Scroll plugin -->
+	<script src="/js/jquery.mousewheel.js"></script>
+
+	<!-- Custom Scrollbar plugin -->
+	<script src="/js/jquery.mCustomScrollbar.js"></script>
+
+	<!-- Main JS File -->
+	<script src="/js/main.js"></script>
+
+	<!--[if lt IE 10]><script type="text/javascript" src="js/placeholder.js"></script><![endif]-->
+
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+		<meta charset="utf-8"></meta>
+        <title>TALKABLE</title>
+        <meta name="description" content="The description should optimally be between 150-160 characters."></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+        <meta name="author" content="Madeon08"></meta>
+
+        <!-- ================= Favicon ================== -->
+        <!-- Standard -->
+        <link rel="shortcut icon" href="img/favicon.png"></link>
+        <!-- Retina iPad Touch Icon-->
+        <link rel="apple-touch-icon" sizes="144x144" href="img/favicon-retina-ipad.png"></link>
+        <!-- Retina iPhone Touch Icon-->
+        <link rel="apple-touch-icon" sizes="114x114" href="img/favicon-retina-iphone.png"></link>
+        <!-- Standard iPad Touch Icon--> 
+        <link rel="apple-touch-icon" sizes="72x72" href="img/favicon-standard-ipad.png"></link>
+        <!-- Standard iPhone Touch Icon--> 
+        <link rel="apple-touch-icon" sizes="57x57" href="img/favicon-standard-iphone.png"></link>
+
+        <!-- ============== Resources style ============== -->
+        <link rel="stylesheet" th:href="@{css/style-info-reg.css}" ></link>
+
+		<!-- Modernizr #1d1d23runs quickly on page load to detect features -->
+		<script src="js/modernizr.custom.js"></script>
+	</head>
+	
+	<body>
+
+		<!-- Page preloader -->
+		<div id="loading">
+			<div id="preloader">
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+
+		<!-- Overlay and Star effect -->
+		<div class="global-overlay" style="opacity: 1; transform: translateX(100%);">
+			<div class="overlay">
+
+				<div id="stars"></div>
+				<div id="stars2"></div>
+				<div id="stars3"></div>
+
+			</div>
+		</div>
+
+		<!-- START - Home/Left Part -->
+		<section id="left-side">
+
+			<!-- Your logo -->
+			<img src="img/logo.png" alt="" class="brand-logo" />
+
+			<div class="content">
+
+				<h1 class="text-intro opacity-0">Hey Guys!<br/>
+					We're Coming Soon...</h1>
+
+				<h2 class="text-intro opacity-0">However if you're an eager beaver and can't wait to get started, you may register for an account here right !</h2>
+
+				<nav>
+					<ul>
+						<li>
+
+							<a th:href="@{/login}" id="home" class="light-btn text-intro opacity-0">BACK</a>
+						</li>
+					</ul>
+				</nav>
+
+			</div>
+
+			<!-- Social icons -->
+			<div class="social-icons">
+
+				<a href="#"><i class="fa fa-facebook"></i></a>
+				<a href="#"><i class="fa fa-twitter"></i></a>
+				<a href="#"><i class="fa fa-google-plus"></i></a>
+				<a href="#"><i class="fa fa-linkedin"></i></a>
+
+			</div>
+
+		</section>
+		<!-- END - Home/Left Part -->
+
+		<!-- START - More Informations/Right Part -->
+		<section id="right-side">
+
+			<div class="content">
+
+				<h3>TALKABLE, PROTOTYPE DEMONSTRATION</h3>
+
+				<p>So you want to join the party? You've definitely come to the right page! All you need
+				is a bit of imagination, a bit of memory and a University of Leicester email
+				account. Follow the very basic instructions below (fill a few boxes) and you'll be with us in no time!
+				 You're welcome to bring a friend with you, it's an open invite!
+				<br/>
+
+                <!-- START - Contact Form -->
+            	<form id="contact-form" action="#" th:action="@{/register}" th:object="${user}" data-toggle="validator" method="POST">
+
+            		<div class="row">
+
+                        <!-- Full name -->
+                        <div class="col-xs-12 col-sm-6 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" th:field="*{firstName}" id="name" class="form form-control" placeholder="First Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'First Name'" autocomplete="off" name="fname" data-name="Name" required="required"/>
+                            	<div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <!-- E-mail -->
+                        <div class="col-xs-12 col-sm-6 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" th:field="*{lastName}" id="name" class="form form-control" placeholder="Last Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Last Name'" autocomplete="off" name="lname" data-name="Name" required="required"/>
+                           		<div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">  
+                        <div class="col-xs-12 col-sm-6 col-lg-6">
+                            <div class="form-group">
+                                <!-- Requires : a valid UoL Email Address, also unique -->
+                                <input type="email" th:field="*{emailAddress}" id="emailAddress" data-remote="/register/emailCheck" data-remote-error="Somebody has already registered an account with this email address, if you've forgotten your password, follow the instructions below" autocomplete="off" class="form form-control" placeholder="Your UoL Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your UoL Email'" name="emailAddress" required="required"/>
+                            	<div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                        <!-- E-mail -->
+                        <div class="col-xs-12 col-sm-6 col-lg-6">
+                            <div class="form-group">
+                                <input type="text" th:field="*{username}" pattern="(?=^.{5,10}$)^[a-zA-Z][a-zA-Z0-9]*[._-]?[a-zA-Z0-9]+$" data-remote="/register/usernameCheck" data-remote-error="Somebody has already registered an account with this username, if you've forgotten your password, follow the instructions below" data-error="Username must be between 5 and 10 characters in length, and must start with an alphabetic character" autocomplete="off" id="username" class="form form-control" placeholder="Desired Username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Desired Username'" name="username" required="required"/>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-lg-6">
+                            <div class="form-group">
+                                <input type="password" id="inputPassword" th:field="*{password}" placeholder="Password" pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&amp;])[A-Za-z\d$@$!%*#?&amp;]{8,}$" data-error="Password must be over 8 characters in length, and must contain an alphabetic, numeric and a special character" class="form form-control" required="required"/>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        
+                         <div class="col-xs-12 col-sm-6 col-lg-6">
+                            <div class="form-group">
+                                <input type="password" id="inputConfirm" data-match-error="Passwords do not match" placeholder="Confirm Password" data-match="#inputPassword" class="form form-control" required="required"/>
+                                <div class="help-block with-errors"></div>                            
+                            </div>
+                        </div>                      
+                    </div>
+					</br>
+					<p class="TCS">By clicking <b>"Join 'talkable'</b> you are agreeing to our <b>Terms and Conditions</b> and <b>Privacy Policy</b>, which
+					have not actually yet been written, but they will be soon!</p></br>
+					
+                	<!-- Button submit -->
+                	<button type="submit" id="valid-form" class="btn btn-color">Join 'talkable'</button>
+    
+                </form>
+                <!-- END - Contact Form -->
+	            
+	            <!-- Answer for the contact form is displayed in the next div, do not remove it. -->       
+                <div id="block-answer">
+
+					<div id="answer"></div>
+
+				</div>
+
+				<div class="info-contact row">
+
+                    <div class="col-xs-12 col-sm-4 col-lg-4 item-map">
+                        <div class="contact-item"><i class="icon ion-ios-telephone"></i>
+                            <p>Phone: (+44) 7403153749
+                                <br/>Fax: (+44) 123456789</p>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-4 col-lg-4 item-map">
+                        <div class="contact-item"><i class="icon ion-ios-location"></i>
+                            <p>Mayors Walk,
+                                <br/>LE2 LEICESTER, UK</p>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-4 col-lg-4 item-map">
+                        <div class="contact-item"><i class="icon ion-ios-email"></i>
+                            <p><a href="mailto:your-email@good.com">bm234@student.le.ac.uk</a>
+                            	<br/><a href="mailto:your-email-pro@good.com">benmeysner@outlook.com</a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+				</p>
+			</div>
+			<!-- /. Content -->
+			<footer>
+				</br/></br></br>
+				</br></br></br>
+				</br></br>
+				<p>© TALKABLE - BENJAMIN THOMAS MEYSNER - UNIVERSITY OF LEICESTER</p>
+
+			</footer>
+
+		</section>
+		<!-- START - More Informations/Right Part -->
+
+		<!-- Button Cross to close the More Informations/Right Part -->
+		<button id="close-more-info" class="hide-close"><i class="icon ion-ios-close-outline"></i></button>
+
+<!-- START - Newsletter Popup -->
+		<div id="somedialog" class="dialog">
+
+			<div class="dialog__overlay"></div>
+					
+			<div class="dialog__content">
+						
+				<div class="dialog-inner">
+							
+					<h4>Log in now</h4>
+							
+					<p><strong>User Login</strong></p>
+					<!-- Newsletter Form -->
+					<div id="subscribe">
+
+		                <form action="#" th:action="@{/login}" th:object="${user}" id="notifyMe" method="POST" role="form">
+
+		                    <div class="form-group">
+
+		                        <div class="controls">
+		                            
+		                        	<!-- Field  -->
+		                        	<input type="text" th:field="*{username}" id="mail-sub" name="email" placeholder="Enter username" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Click here to write your username'" class="form-control email srequiredField" />
+		                        	<input type="text" th:field="*{password}" id="mail-sub" name="email" placeholder="Enter password" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Click here to write your password'" class="form-control email srequiredField" />
+		                        	<!-- Spinner top left during the submission -->
+		                        	<i class="fa fa-spinner opacity-0"></i>
+
+		                            <!-- Button -->
+		                            <button class="btn btn-lg submit">GET INVOLVED</button>
+
+		                            <div class="clear"></div>
+
+		                        </div>
+
+		                    </div>
+
+		                </form>
+
+						<!-- Answer for the newsletter form is displayed in the next div, do not remove it. -->
+						<div class="block-message">
+
+							<div class="message">
+
+								<p class="notify-valid"></p>
+
+							</div>
+
+						</div>
+
+        			</div>
+        			<!-- /. Newsletter Form -->
+
+				</div>
+				<!-- /. dialog-inner -->
+
+				<!-- Button Cross to close the Newsletter Popup -->
+				<button class="close-newsletter" data-dialog-close=""><i class="icon ion-close-round"></i></button>
+
+			</div>
+			<!-- /. dialog__content -->
+						
+		</div>
+		<!-- END - Newsletter Popup -->
+
+		<!-- Root element of PhotoSwipe, the gallery. Must have class pswp. -->
+		<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+		    <!-- Background of PhotoSwipe. 
+	        	It's a separate element as animating opacity is faster than rgba(). -->
+		    <div class="pswp__bg"></div>
+
+		    <!-- Slides wrapper with overflow:hidden. -->
+		    <div class="pswp__scroll-wrap">
+
+		        <!-- Container that holds slides. 
+		            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+		            Don't modify these 3 pswp__item elements, data is added later on. -->
+		        <div class="pswp__container">
+		            <div class="pswp__item"></div>
+		            <div class="pswp__item"></div>
+		            <div class="pswp__item"></div>
+		        </div>
+
+		        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+		        <div class="pswp__ui pswp__ui--hidden">
+
+		            <div class="pswp__top-bar">
+
+		                <!--  Controls are self-explanatory. Order can be changed. -->
+
+		                <div class="pswp__counter"></div>
+
+		                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+		                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+		                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+		                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+		    
+		                <div class="pswp__preloader">
+		                    <div class="pswp__preloader__icn">
+		                      <div class="pswp__preloader__cut">
+		                        <div class="pswp__preloader__donut"></div>
+		                      </div>
+		                    </div>
+		                </div>
+
+		            </div>
+
+		            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+		                <div class="pswp__share-tooltip"></div> 
+		            </div>
+
+		            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+		            </button>
+
+		            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+		            </button>
+
+		            <div class="pswp__caption">
+		                <div class="pswp__caption__center"></div>
+		            </div>
+
+		        </div>
+
+		    </div>
+
+		</div>
+		<!-- /. Root element of PhotoSwipe. Must have class pswp. -->
+
+	<!-- ///////////////////\\\\\\\\\\\\\\\\\\\ -->
+    <!-- ********** Resources jQuery ********** -->
+    <!-- \\\\\\\\\\\\\\\\\\\/////////////////// -->
+	
+	<!-- * Libraries jQuery, Easing and Bootstrap - Be careful to not remove them * -->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.easings.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+
+	<!-- PhotoSwipe Core JS file -->
+	<script src="js/velocity.min.js"></script> 
+
+	<!-- PhotoSwipe UI JS file -->
+	<script src="js/velocity.ui.min.js"></script> 
+
+	<!-- Newsletter plugin -->
+	<script src="js/notifyMe.js"></script>
+
+	<!-- Scroll plugin -->
+	<script src="js/jquery.mousewheel.js"></script>
+
+	<!-- Custom Scrollbar plugin -->
+	<script src="js/jquery.mCustomScrollbar.js"></script>
+
+	<!-- Popup Newsletter Form -->
+	<script src="js/classie.js"></script>
+	<script src="js/dialogFx.js"></script>
+
+	<!-- PhotoSwipe Core JS file -->
+	<script src="js/photoswipe.js"></script> 
+
+	<!-- PhotoSwipe UI JS file -->
+	<script src="js/photoswipe-ui-default.js"></script> 
+
+	<!-- Main JS File -->
+	<script src="js/main.js"></script>
+	
+	<!-- Form Validation -->
+	<script type="text/javascript" src="js/validator.min.js"></script>
+	
+	<!--[if lt IE 10]><script type="text/javascript" src="js/placeholder.js"></script><![endif]-->
+
+	</body>
+</html>
