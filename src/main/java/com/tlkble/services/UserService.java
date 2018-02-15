@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.tlkble.domain.Event;
 import com.tlkble.domain.User;
 
 
@@ -35,4 +36,6 @@ public interface UserService {
 	void update(User user);
 	
 	User getCurrentUser();
+	
+	boolean isTheCreator(User user, Event event);
 }

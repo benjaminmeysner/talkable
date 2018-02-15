@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import com.tlkble.domain.Event;
 import com.tlkble.domain.User;
 import com.tlkble.repository.UserRepository;
 import com.tlkble.services.UserService;
@@ -173,6 +174,18 @@ public class UserServiceImpl implements UserService {
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean isTheCreator(User user, Event event) {
+		boolean exists = false;
+
+		for (int i = 0; i < user.getEventsCreatedList().size(); i++) {
+			if (user.getEventsCreatedList().get(i).getId().equals(event.getId())) {
+				exists = true;
+			}
+		}
+		return exists;
 	}
 
 }

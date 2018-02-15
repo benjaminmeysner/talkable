@@ -72,6 +72,200 @@ table {
 	border-spacing: 0
 }
 
+/*!
+// CSS only Responsive Tables
+// http://dbushell.com/2016/03/04/css-only-responsive-tables/
+// by David Bushell
+*/
+
+.rtable {
+  /*!
+  // IE needs inline-block to position scrolling shadows otherwise use:
+  // display: block;
+  // max-width: min-content;
+  */
+  display: inline-block;
+  vertical-align: top;
+  max-width: 100%;
+  
+  overflow-x: auto;
+  
+  // optional - looks better for small cell values
+  white-space: nowrap;
+
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.rtable,
+.rtable--flip tbody {
+  // optional - enable iOS momentum scrolling
+  -webkit-overflow-scrolling: touch;
+  
+  // scrolling shadows
+  background: radial-gradient(left, ellipse, rgba(0,0,0, .2) 0%, rgba(0,0,0, 0) 75%) 0 center,
+              radial-gradient(right, ellipse, rgba(0,0,0, .2) 0%, rgba(0,0,0, 0) 75%) 100% center;
+  background-size: 10px 100%, 10px 100%;
+  background-attachment: scroll, scroll;
+  background-repeat: no-repeat;
+}
+
+// change these gradients from white to your background colour if it differs
+// gradient on the first cells to hide the left shadow
+.rtable td:first-child,
+.rtable--flip tbody tr:first-child {
+  background-image: linear-gradient(to right, rgba(255,255,255, 1) 50%, rgba(255,255,255, 0) 100%);
+  background-repeat: no-repeat;
+  background-size: 20px 100%;
+}
+
+// gradient on the last cells to hide the right shadow
+.rtable td:last-child,
+.rtable--flip tbody tr:last-child {
+  background-image: linear-gradient(to left, rgba(255,255,255, 1) 50%, rgba(255,255,255, 0) 100%);
+  background-repeat: no-repeat;
+  background-position: 100% 0;
+  background-size: 20px 100%;
+}
+
+.rtable th {
+  font-size: 11px;
+  text-align: left;
+  text-transform: uppercase;
+  background: #f2f0e6;
+}
+
+.rtable th,
+.rtable td {
+    padding: 6px 12px;
+    border: 1px solid #f5f2f2;
+    background: #fff;
+}
+
+.rtable--flip {
+  display: flex;
+  overflow: hidden;
+  background: none;
+}
+
+.rtable--flip thead {
+  display: flex;
+  flex-shrink: 0;
+  min-width: min-content;
+}
+
+.rtable--flip tbody {
+  display: flex;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.rtable--flip tr {
+  display: flex;
+  flex-direction: column;
+  min-width: min-content;
+  flex-shrink: 0;
+}
+
+.rtable--flip td,
+.rtable--flip th {
+  display: block;
+}
+
+.rtable--flip td {
+  background-image: none !important;
+  // border-collapse is no longer active
+  border-left: 0;
+}
+
+// border-collapse is no longer active
+.rtable--flip th:not(:last-child),
+.rtable--flip td:not(:last-child) {
+  border-bottom: 0;
+}
+
+/***********************\
+
+	Modal Module - Title CSS FTW
+
+\***********************/
+
+.Modal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0);
+  visibility: hidden;
+  
+  .content {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    width: 50%;
+    padding: 50px;
+    border-radius: 3px;
+    background: #fff;
+    transform: translate(-50%, -30%) scale(0);
+  }
+  
+  .close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: block;
+    width: 18px;
+    height: 18px;
+    padding: 5px;
+    line-height: 18px;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+    background: #A38CDC;
+    color: #fff;
+    &:before {
+    	content: '\2715';
+    }
+  }
+  
+  &.is-visible {
+    visibility: visible;
+    background: rgba(0, 0, 0, 0.5);
+    transition: background .35s;
+    transition-delay: .1s; // just delay enough to make modal visible before transitiong bg
+
+    .content {
+      transform: translate(-50%, -30%) scale(1);
+      transition: transform .35s;
+    }
+  }
+}
+
+/***********************\
+
+	Pen Specific Styles 
+
+\***********************/
+
+body {
+  background: #FBFAF5;
+}
+
+.button {
+  display: block;
+  width: 150px;
+  height: 45px;
+  line-height: 45px;
+  margin: 125px auto 0;
+  border-radius: 3px;
+  text-align: center;
+  text-decoration: none;
+  background: #A38CDC;
+  color: #fff;
+}
+
 #loading {
 	width: 100vw;
 	height: 100vh;
@@ -366,7 +560,7 @@ a {
 	transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
 	cursor: pointer;
 	text-decoration: none;
-	color: #fff
+	color: #55d7c5;
 }
 
 a:hover {

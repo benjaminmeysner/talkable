@@ -38,6 +38,7 @@ public class Event {
 	@Getter @Setter private String creator;
 	@Getter @Setter private boolean isAlive;
 	@Getter @Setter List<String> users = new ArrayList<String>();
+	@Getter @Setter List<OutputMessage> messages = new ArrayList<OutputMessage>();
 	
 	public Event (String id, String eventTitle, String eventDescription) {
 		this.id = id;

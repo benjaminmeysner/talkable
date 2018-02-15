@@ -13,10 +13,12 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
+import com.tlkble.domain.Event;
 import com.tlkble.domain.Message;
 import com.tlkble.domain.OutputMessage;
 import com.tlkble.domain.User;
 import com.tlkble.services.BotService;
+import com.tlkble.services.EventService;
 import com.tlkble.services.MessageService;
 import com.tlkble.services.UserService;
 
@@ -38,6 +40,9 @@ public class MessageController {
 
 	@Autowired
 	BotService botService;
+	
+	@Autowired
+	EventService eventService;
 
 	@Autowired
 	SimpMessagingTemplate simpMessagingTemp;
@@ -58,9 +63,11 @@ public class MessageController {
 
 		String time = new SimpleDateFormat("HH:mm").format(new Date());
 
+		Event event = eventService.findEventById(eventId);		
 		User user = (User) ((Authentication) principal).getPrincipal();
+		
 		OutputMessage returned_message = null;
-		if (user != null) {
+		if (user != null && event != null) {
 			returned_message = new OutputMessage(user.getUsername(), message.getText(), time);
 			user.setMessagesSent(user.getMessagesSent() + 1);
 			user.setLastMessageSent(time);
@@ -72,6 +79,7 @@ public class MessageController {
 		if (botService.checkMessageLength(message) > 20) {
 			messageService.saveMessage(returned_message);
 			returned_message.setEventId(eventId);
+			event.getMessages().add(returned_message);
 			return returned_message;
 		}
 		return null;

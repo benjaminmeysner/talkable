@@ -1,6 +1,8 @@
 package com.tlkble.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -47,6 +49,8 @@ public class User {
 	/* Event Data */
 	@Getter @Setter private int eventsCreated;
 	@Getter @Setter private int eventsJoined;
+	@Getter @Setter private List<Event> eventsJoinedList = new ArrayList<Event>();
+	@Getter @Setter private List<Event> eventsCreatedList = new ArrayList<Event>();
 	@Getter @Setter private int messagesSent;
 	@Getter @Setter private String lastMessageSent;
 	

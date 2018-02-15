@@ -49,7 +49,11 @@ public class EventController {
 			User user = (User) ((Authentication) principal).getPrincipal();
 
 			if (user != null) {
-				user.setEventsJoined(user.getEventsJoined() + 1);
+				if(!userService.isTheCreator(user, event)) {
+					user.setEventsJoined(user.getEventsJoined() + 1);
+					user.getEventsJoinedList().add(event);
+				}
+
 				userService.update(user);
 			}
 
@@ -89,6 +93,7 @@ public class EventController {
 		if (user != null) {
 			event.setCreator(user.getUsername());
 			user.setEventsCreated(user.getEventsCreated() + 1);
+			user.getEventsCreatedList().add(event);
 			event.getUsers().add(user.getUsername());
 			userService.update(user);
 		} else
