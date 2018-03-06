@@ -14,6 +14,8 @@
  - Added scheduled task to normalise event status, check whether the event should be set to inactive due to lack of activity.
  - Disconnects all users if event becomes inactive, or the creator ends the event.
  - User statistics and personal log
+ 
+## Screenies
 
 ![alt text](Pictures/rsz_1deepinscreenshot20180306185857.jpg "1")
 ![alt text](Pictures/rsz_deepinscreenshot20180306185828.jpg "2")
