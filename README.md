@@ -15,3 +15,7 @@
  - Disconnects all users if event becomes inactive, or the creator ends the event.
  - User statistics and personal log
 
+![alt text](Pictures/rsz_1deepinscreenshot20180306185857.jpg "1")
+![alt text](Pictues/rsz_deepinscreenshot20180306185828.jpg "2")
+![alt text](Pictures/rsz_deepinscreenshot20180306190415.jpg "3")
+![alt text](Pictures/rsz_deepinscreenshot20180306190617.jpg "4")
