@@ -1578,7 +1578,7 @@ to {
 }
 
 #right-side {
-	background: #f9f9f9fa;
+	background: #F2F3F3;
 	position: relative;
 	overflow: auto;
 	-webkit-transform: translate3d(100%, 0, 0);
