@@ -66,20 +66,37 @@ public class MessageController {
 		Event event = eventService.findEventById(eventId);		
 		User user = (User) ((Authentication) principal).getPrincipal();
 		
+		System.out.println("start size = " + event.getMessages().size());
+		
+		// Create a new output message
 		OutputMessage returned_message = null;
+		
+		// If the user is logged in & the event exists
 		if (user != null && event != null) {
+			// Set variables
 			returned_message = new OutputMessage(user.getUsername(), message.getText(), time);
 			user.setMessagesSent(user.getMessagesSent() + 1);
 			user.setLastMessageSent(time);
+			// Persist
 			userService.update(user);
 		}
 
+		// Cloak any profane words inside the message, if it has any.
 		returned_message.setMessage(botService.cloakProfaneMessage(message));
 		
+		// Finally, If the message length is over 20 characters
 		if (botService.checkMessageLength(message) > 20) {
+			// Persist 
 			messageService.saveMessage(returned_message);
+			// Set the Event ID @ the message
 			returned_message.setEventId(eventId);
+			// Add the message to the Event's List of MSGS
 			event.getMessages().add(returned_message);
+			// Set the amount of time the event has been inactive
+			event.setInactiveMinutes(0);
+			// Persist
+			eventService.updateEvent(event);
+			// Return
 			return returned_message;
 		}
 		return null;

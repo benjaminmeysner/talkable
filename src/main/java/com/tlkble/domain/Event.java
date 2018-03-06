@@ -35,6 +35,7 @@ public class Event {
 	@Getter @Setter private String eventDate;
 	@Getter @Setter private String eventStartTime;
 	@Getter @Setter private String eventFinishTime;
+	@Getter @Setter private int inactiveMinutes;
 	@Getter @Setter private String creator;
 	@Getter @Setter private boolean isAlive;
 	@Getter @Setter List<String> users = new ArrayList<String>();

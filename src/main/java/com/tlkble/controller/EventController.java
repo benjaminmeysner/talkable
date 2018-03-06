@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tlkble.domain.Event;
 import com.tlkble.domain.User;
 import com.tlkble.services.EventService;
@@ -39,17 +43,25 @@ public class EventController {
 
 	@RequestMapping("/event/{eventId}")
 	public String eventhome(@PathVariable(value = "eventId", required = true) String eventId, Model model,
-			Principal principal) {
+			Principal principal) throws JsonProcessingException {
 
 		Event event = eventService.findEventById(eventId);
 
-		if (event == null) {
-			return "";
+		// If user is not logged or the event is not 'alive' show appropriate view
+		if (event == null || !event.isAlive()) {
+			return "no_event";
 		} else {
 			User user = (User) ((Authentication) principal).getPrincipal();
 
+			// Adding all previous message as model attribute
+			ObjectMapper mapper = new ObjectMapper();
+			// In string format
+			String messageList = mapper.writeValueAsString(event.getMessages());
+			model.addAttribute("messages", messageList);
+			
+			// Update user statistical counts if they are not the creator
 			if (user != null) {
-				if(!userService.isTheCreator(user, event)) {
+				if (!userService.isTheCreator(user, event)) {
 					user.setEventsJoined(user.getEventsJoined() + 1);
 					user.getEventsJoinedList().add(event);
 				}
@@ -73,6 +85,15 @@ public class EventController {
 	}
 
 	/**
+	 * Every 60 seconds (using a cron expression) check if events are inactive ( An
+	 * event has not received any message for 180 minutes )
+	 */
+	@Scheduled(cron = "0 * * ? * *")
+	public void checkIfEventsAreInactive() {
+		eventService.normalise();
+	}
+
+	/**
 	 * eventCreate Create a new event
 	 * 
 	 * @param event
@@ -82,13 +103,15 @@ public class EventController {
 	@RequestMapping(value = "/event/new", method = RequestMethod.POST)
 	public String eventCreate(@RequestBody @ModelAttribute("event") Event event, Model model, Principal principal) {
 
-		// Set chrono stats
+		// Set time statistics
 		edtf = new EventDateTimeFormat();
 		event.setEventDate(edtf.dateFormat(new Date()));
 		event.setEventStartTime(edtf.timeFormat(LocalTime.now()));
+
+		// The event is now live!
 		event.setAlive(true);
 
-		// Update User stats
+		// If the user is logged in, Update User statistics
 		User user = (User) ((Authentication) principal).getPrincipal();
 		if (user != null) {
 			event.setCreator(user.getUsername());
@@ -108,10 +131,14 @@ public class EventController {
 			event.setEventDescription("This is a quick event. No description was entered.");
 		}
 
+		// Create the event
 		eventService.createEvent(event);
 		model.addAttribute("event", new Event());
 		return "redirect:/event/" + event.getId();
 	}
+
+	@Autowired
+	private SimpMessagingTemplate template; // Broadcast to users that event has ended, and force disconnect
 
 	/**
 	 * endEvent End current event
@@ -127,6 +154,11 @@ public class EventController {
 		event.setAlive(false);
 		eventService.updateEvent(event);
 		model.addAttribute("event", new Event());
+
+		// Send signal to all clients connected that the event has finished
+		template.convertAndSend("/topic/eventStatus?" + eventId, true);
+
+		// Event creator redirects
 		return "redirect:/user/home";
 	}
 }

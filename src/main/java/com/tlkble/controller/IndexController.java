@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tlkble.domain.Event;
 import com.tlkble.domain.User;
+import com.tlkble.services.EventService;
 import com.tlkble.services.UserService;
 
 @Controller
@@ -21,6 +22,9 @@ public class IndexController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	EventService eventService;
 
 	@RequestMapping("/")
 	@Secured("ROLE_USER")
@@ -45,6 +49,7 @@ public class IndexController {
 			model.addAttribute("currentDate", new Date());
 			model.addAttribute("user", user);
 			model.addAttribute("event", new Event());
+			model.addAttribute("eventsOnlineCount", eventService.activeEvents());
 			return "index";
 		}
 		return null;

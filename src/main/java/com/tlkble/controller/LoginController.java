@@ -54,8 +54,8 @@ public class LoginController {
 
 		if (userOrEmail == "" || password == "") {
 			loginError = "There are missing fields, you have failed to provide a username,"
-					+ "email address or a password, please note, you can log into your account with"
-					+ "either your email address or your username";
+					+ " email address or a password, please note, you can log into your account with"
+					+ " either your email address or your username";
 			ra.addFlashAttribute("loginError", loginError);
 			return "redirect:/login";
 
