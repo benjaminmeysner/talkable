@@ -1,0 +1,9 @@
+com/tlkble/suite/LoginControllerTest.class
+com/tlkble/suite/TestSetup.class
+com/tlkble/suite/LogControllerTest.class
+com/tlkble/suite/UserRestControllerTest.class
+com/tlkble/AppTest.class
+com/tlkble/suite/EventControllerTest.class
+com/tlkble/suite/WebsocketEndpointTest.class
+com/tlkble/suite/EventRestControllerTest.class
+com/tlkble/suite/RegisterControllerTest.class

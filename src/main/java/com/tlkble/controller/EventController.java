@@ -65,7 +65,6 @@ public class EventController {
 					user.setEventsJoined(user.getEventsJoined() + 1);
 					user.getEventsJoinedList().add(event);
 				}
-
 				userService.update(user);
 			}
 

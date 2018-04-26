@@ -61,6 +61,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		 * proceed...
 		 */
 		
+		System.out.println("Testing processes");
+		
 		return new UsernamePasswordAuthenticationToken(authentication.getName(),
 				authentication.getCredentials().toString(), getAuthorities(user));
 	}

@@ -23,6 +23,7 @@ public class OutputMessage {
 	@Getter @Setter public String eventId;
 	@Getter @Setter public String author;
 	@Getter @Setter public String message;
+	@Getter @Setter public String[] words;
 	@Getter @Setter public String time;
 	@Getter @Setter public String id;
 	
@@ -30,7 +31,7 @@ public class OutputMessage {
 		this.author = author;
 		this.message = message;
 		this.time = time;
+		
+		words = message.split("\\s+");
 	}
-	
-
 }

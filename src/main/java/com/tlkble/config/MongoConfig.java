@@ -25,13 +25,13 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
 	@Override
 	protected String getDatabaseName() {
-		return "tlkble";
+		return "talkable-release";
 	}
 
 	@Override
 	public Mongo mongo() throws Exception {		
-		MongoCredential credential = MongoCredential.createCredential("ben", "tlkble", "change_me".toCharArray());
-		return new MongoClient((new ServerAddress("ds145275.mlab.com:45275")), Arrays.asList(credential));
+		MongoCredential credential = MongoCredential.createCredential("admin", "talkable-release", "testadmin".toCharArray());
+		return new MongoClient((new ServerAddress("ds259499.mlab.com:59499")), Arrays.asList(credential));
 	}
 	  
 	@Override

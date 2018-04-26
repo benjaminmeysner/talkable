@@ -1,14 +1,12 @@
 package com.tlkble.domain;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -37,7 +35,10 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonSerialize
-public class User {
+public class User{
+	/**
+	 * 
+	 */
 	/* Personal Data */
 	@Getter @Setter private String firstName;
 	@Getter @Setter private String lastName;
@@ -51,6 +52,7 @@ public class User {
 	@Getter @Setter private int eventsJoined;
 	@Getter @Setter private List<Event> eventsJoinedList = new ArrayList<Event>();
 	@Getter @Setter private List<Event> eventsCreatedList = new ArrayList<Event>();
+	@Getter @Setter private List<OutputMessage> messagesSentList = new ArrayList<OutputMessage>();	
 	@Getter @Setter private int messagesSent;
 	@Getter @Setter private String lastMessageSent;
 	
@@ -63,15 +65,6 @@ public class User {
 		this.emailAddress = emailAddress;
 		this.username = username;
 		this.password = password;
-	}
-
-	public boolean isEnabled() {
-		return true;
-	}
-
-	public User(String username2, String password2, boolean b, boolean c, boolean d,
-			Collection<? extends GrantedAuthority> authorities) {
-		// TODO Auto-generated constructor stub
 	}
 }
 

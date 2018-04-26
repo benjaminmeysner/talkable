@@ -38,6 +38,9 @@ public class CustomAuthenticationHandler implements AuthenticationSuccessHandler
 		session.setAttribute("user", user);
 		response.setStatus(HttpServletResponse.SC_OK);
 		
+		System.out.println("Testing processes");
+
+		
 		/* redirect to home upon
 		 * login
 		 */

@@ -3,6 +3,8 @@ package com.tlkble.config;
 import com.tlkble.config.CustomAuthenticationFailureHandler;
 import com.tlkble.config.CustomAuthenticationHandler;
 import com.tlkble.config.CustomAuthenticationProvider;
+import com.tlkble.services.impl.UserServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -33,6 +35,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomAuthenticationFailureHandler failureHandler;
+	
+	@Autowired
+	UserServiceImpl userDetailsService;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -56,5 +61,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/resources/**");
-	}
+	}			
 }

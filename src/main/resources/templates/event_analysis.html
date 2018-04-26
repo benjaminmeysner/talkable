@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"></meta>
+<title>TALKABLE</title>
+<meta name="description"
+	content="The description should optimally be between 150-160 characters."></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<meta name="author" content="Madeon08"></meta>
+<!-- Security Required -->
+<meta name="_csrf" content="${_csrf.token}" />
+<meta name="_csrf_header" content="${_csrf.headerName}" />
+
+<!-- ================= Favicon ================== -->
+<!-- Standard -->
+<link rel="shortcut icon" href="img/favicon.png"></link>
+<!-- Retina iPad Touch Icon-->
+<link rel="apple-touch-icon" sizes="144x144"
+	href="/img/favicon-retina-ipad.png"></link>
+<!-- Retina iPhone Touch Icon-->
+<link rel="apple-touch-icon" sizes="114x114"
+	href="/img/favicon-retina-iphone.png"></link>
+<!-- Standard iPad Touch Icon-->
+<link rel="apple-touch-icon" sizes="72x72"
+	href="/img/favicon-standard-ipad.png"></link>
+<!-- Standard iPhone Touch Icon-->
+<link rel="apple-touch-icon" sizes="57x57"
+	href="/img/favicon-standard-iphone.png"></link>
+
+<!-- ============== Resources style ============== -->
+<link rel="stylesheet" th:href="@{/css/style-event.css}"></link>
+<link rel="stylesheet" th:href="@{/css/animate.css}"></link>
+
+<!-- Modernizr #1d1d23runs quickly on page load to detect features -->
+<script src="js/modernizr.custom.js"></script>
+<style type="text/css">
+.wordcloud {
+	float: left;
+	position: relative;
+	width: 500px;
+	height: 150px;
+	background-color: #eeeeee;
+}
+</style>
+
+</head>
+
+<body>
+
+	<!-- NO JS -->
+	<noscript>
+		<h3>Sorry you need to enable JavaScript to see this content.</h3>
+		<style type="text/css">
+#loading {
+	display: none;
+}
+
+#right-side .content {
+	display: none;
+}
+
+footer {
+	display: none
+}
+
+.global-overlay {
+	display: none
+}
+</style>
+	</noscript>
+	<!-- NO JS -->
+
+	<!-- Page preloader -->
+	<div id="loading">
+		<div id="preloader">
+			<span></span> <span></span>
+		</div>
+	</div>
+
+	<!-- Overlay and Star effect -->
+	<div class="global-overlay"
+		style="opacity: 1; transform: translateX(100%);">
+		<div class="overlay">
+
+			<div id="stars"></div>
+			<div id="stars2"></div>
+			<div id="stars3"></div>
+
+		</div>
+	</div>
+
+	<!-- START - Home/Left Part -->
+	<section id="left-side">
+
+		<!-- Your logo -->
+		<img src="/img/logo.png" alt="" class="brand-logo" />
+
+		<div class="content">
+			<h1 class="text-intro opacity-0">
+				<p class="eventId" th:text="${eventId}"></p>
+			</h1>
+			<h1 class="text-intro opacity-0">Individual Analysis</h1>
+			<nav>
+				<ul>
+					<li>
+						<div>
+							<a th:href="@{/user/home}" class="light-btn text-intro opacity-0">BACK
+								HOME</a>
+						</div>
+					</li>
+					<li>
+						<div>
+							<a th:href="@{/user/log}" class="light-btn text-intro opacity-0">BACK
+								TO LOG</a>
+						</div>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+
+		<!-- Social icons -->
+		<div class="social-icons">
+			<a href="#"><i class="fa fa-facebook"></i></a> <a href="#"><i
+				class="fa fa-twitter"></i></a> <a href="#"><i
+				class="fa fa-google-plus"></i></a> <a href="#"><i
+				class="fa fa-linkedin"></i></a>
+		</div>
+
+	</section>
+	<!-- END - Home/Left Part -->
+
+	<!-- START - More Informations/Right Part -->
+	<section id="right-side">
+
+		<div class="content" id="content">
+
+			<h3>Word frequency analysis</h3>
+			<P>Analysis of the words contained in the messages for this
+				event.</P>
+			<hr>
+
+
+			<h3>Word Cloud</h3>
+
+			<p>
+				The higher the frequency of each word the larger it appears! <br>
+				<br />
+			<div class="row" id="row">
+				<div class="cloud" id="cloud" style="width:800px; height:800px;"></div>
+
+				<br /> <br /> <br> <br> <br /><br/><br/><br/>
+			<h3>Other statistical information</h3>
+			</div>
+			<!-- /. Content -->
+			<footer>
+
+				<p>© TALKABLE - BENJAMIN THOMAS MEYSNER - UNIVERSITY OF
+					LEICESTER</p>
+
+			</footer>
+	</section>
+	<!-- START - More Informations/Right Part -->
+
+	<!-- Button Cross to close the More Informations/Right Part -->
+	<button id="close-more-info" class="hide-close">
+		<i class="icon ion-ios-close-outline"></i>
+	</button>
+
+	<!-- Root element of PhotoSwipe, the gallery. Must have class pswp. -->
+	<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+		<!-- Background of PhotoSwipe. 
+	        	It's a separate element as animating opacity is faster than rgba(). -->
+		<div class="pswp__bg"></div>
+
+		<!-- Slides wrapper with overflow:hidden. -->
+		<div class="pswp__scroll-wrap">
+
+			<!-- Container that holds slides. 
+		            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+		            Don't modify these 3 pswp__item elements, data is added later on. -->
+			<div class="pswp__container">
+				<div class="pswp__item"></div>
+				<div class="pswp__item"></div>
+				<div class="pswp__item"></div>
+			</div>
+
+			<!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+			<div class="pswp__ui pswp__ui--hidden">
+
+				<div class="pswp__top-bar">
+
+					<!--  Controls are self-explanatory. Order can be changed. -->
+
+					<div class="pswp__counter"></div>
+
+					<button class="pswp__button pswp__button--close"
+						title="Close (Esc)"></button>
+
+					<button class="pswp__button pswp__button--share" title="Share"></button>
+
+					<button class="pswp__button pswp__button--fs"
+						title="Toggle fullscreen"></button>
+
+					<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+
+					<div class="pswp__preloader">
+						<div class="pswp__preloader__icn">
+							<div class="pswp__preloader__cut">
+								<div class="pswp__preloader__donut"></div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div
+					class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+					<div class="pswp__share-tooltip"></div>
+				</div>
+
+				<button class="pswp__button pswp__button--arrow--left"
+					title="Previous (arrow left)"></button>
+
+				<button class="pswp__button pswp__button--arrow--right"
+					title="Next (arrow right)"></button>
+
+				<div class="pswp__caption">
+					<div class="pswp__caption__center"></div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!-- /. Root element of PhotoSwipe. Must have class pswp. -->
+
+	<!-- ///////////////////\\\\\\\\\\\\\\\\\\\ -->
+	<!-- ********** Resources jQuery ********** -->
+	<!-- \\\\\\\\\\\\\\\\\\\/////////////////// -->
+
+	<!-- * Libraries jQuery, Easing and Bootstrap - Be careful to not remove them * -->
+	<script src="/js/jquery.min.js"></script>
+	<script src="/js/jquery.easings.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+
+	<script>
+		
+	</script>
+
+	<!-- Unique Event ID Generator -->
+	<script src="/js/eventIdGenerator.js"></script>
+
+	<!-- AJAX login plugin -->
+	<script src="/js/login.js"></script>
+
+	<!-- PhotoSwipe Core JS file -->
+	<script src="/js/velocity.min.js"></script>
+
+	<!-- PhotoSwipe UI JS file -->
+	<script src="/js/velocity.ui.min.js"></script>
+
+	<!-- Scroll plugin -->
+	<script src="/js/jquery.mousewheel.js"></script>
+
+	<!-- Custom Scrollbar plugin -->
+	<script src="/js/jquery.mCustomScrollbar.js"></script>
+
+	<!-- Main JS File -->
+	<script src="/js/main.js"></script>
+	<script type="text/javascript" src="//d3js.org/d3.v3.min.js"
+		charset="utf-8"></script>
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"
+		charset="utf-8"></script>
+	<script th:inline="javascript" type="text/javascript">
+	
+    /*<![CDATA[*/
+	var eventId = [[${eventId}]];
+	/*]]>*/
+	
+	$.ajax({
+		url : '/event/getWordCount',
+		data : {
+			eventid : eventId
+		},
+		dataType : "json",
+		type : "GET",
+		success : function(response) {
+			console.log(response);
+			var color = d3.scale.linear()
+            .domain([0,1,2,3,4,5,6,10,15,20,100])
+            .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
+			
+			 d3.layout.cloud().size([800, 300])
+	            .words(response)
+	            .rotate(0)
+	            .fontSize(function(d) { return d.size; })
+	            .on("end", draw)
+	            .start();
+	    function draw(words) {
+	        d3.select("#cloud").append("svg")
+	                .attr("width", 850)
+	                .attr("height", 350)
+	                .attr("class", "wordcloud")
+	                .append("g")
+	                // without the transform, words words would get cutoff to the left and top, they would
+	                // appear outside of the SVG area
+	                .attr("transform", "translate(5,5)")
+	                .selectAll("text")
+	                .data(words)
+	                .enter().append("text")
+	                .style("font-size", function(d) { return d.size + "px"; })
+	                .style("fill", function(d, i) { return color(i); })
+	                .attr("transform", function(d) {
+	                    return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+	                })
+	                .text(function(d) { return d.text; });}
+			
+			
+			
+		},
+		error : function(response) {}
+	});
+
+	</script>
+	<!--[if lt IE 10]><script type="text/javascript" src="js/placeholder.js"></script><![endif]-->
+
+</body>
+</html>

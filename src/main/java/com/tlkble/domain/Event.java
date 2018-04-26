@@ -46,6 +46,4 @@ public class Event {
 		this.eventTitle = eventTitle;
 		this.eventDescription = eventDescription;
 	}
-	
-	
 }

@@ -39,6 +39,24 @@ public class EventService {
 		}
 		return cnt;
 	}
+	
+	/**
+	 * Produces a count of all the events which have their isAlive boolean set to
+	 * 'false'
+	 * 
+	 * @return
+	 */
+	public int inactiveEvents() {
+		
+		// Theoretically size() - activeEvents();
+		int cnt = 0;
+		for (Event e : eventRepository.findAll()) {
+			if (!e.isAlive())
+				++cnt;
+		}
+		return cnt;
+	}
+	
 
 	@Autowired
 	private SimpMessagingTemplate template; // Broadcast to users that event has ended, and force disconnect
@@ -50,6 +68,8 @@ public class EventService {
 	public void normalise() {
 		for (Event e : eventRepository.findAll()) {
 			if (e.isAlive()) {
+				
+				// Set the amount of time an event can be inactive before it is made unavailable (in minutes)
 				if (e.getInactiveMinutes() >= 2) {
 					
 					// Set isAlive to 'false'

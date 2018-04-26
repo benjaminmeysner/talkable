@@ -22,6 +22,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.tlkble.domain.Event;
 import com.tlkble.domain.Message;
+import com.tlkble.domain.User;
+import com.tlkble.repository.EventRepository;
 
 /**
  * =============================================================================
@@ -40,7 +42,7 @@ import com.tlkble.domain.Message;
  * sent 13. A message which contains an expletive is not sent and a warning is
  * sent to the user *MULTIPLE TESTS* 14. A message which is a response string of
  * the creator, triggers a bot to issue a prerecorded response *MULTIPLE TESTS*
- * 15. Message lengths
+ * 15. Message lengths 16. Test active event counter
  * 
  * inclusive of spring security
  * ==============================================================================
@@ -56,15 +58,17 @@ public class EventControllerTest extends TestSetup {
 	@Autowired
 	WebApplicationContext wac;
 
+	@Autowired
+	EventRepository eventRepo;
+
 	@BeforeClass
 	public static void configure() {
 	}
 
 	@Before
 	public void setup() {
-		mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-				/* Applying Spring Security */
-				.apply(springSecurity()).build();
+		mockMvc = MockMvcBuilders.webAppContextSetup(wac).apply(springSecurity()).build();
+		eventRepo.deleteAll();
 
 	}
 
@@ -106,18 +110,18 @@ public class EventControllerTest extends TestSetup {
 		eventService.createEvent(new_event);
 
 		// mockMvc.perform(get("/event/ABC123").with(csrf())).andExpect(redirectedUrl(server
-		 //+ "/event/ABC123"))
-		 //.andExpect(status().is3xxRedirection());
+		// + "/event/ABC123"))
+		// .andExpect(status().is3xxRedirection());
 	}
-	
+
 	/**
 	 * Test 4 - If an event has been created it can be ended
 	 */
 	@Test
 	public void _an_event_which_has_been_created_can_be_ended() throws Exception {
-		// TO-DO 
+		// TO-DO
 	}
-	
+
 	/**
 	 * Test 5 - User cannot join an event after it has been ended
 	 */
@@ -125,7 +129,6 @@ public class EventControllerTest extends TestSetup {
 	public void _a_user_cannot_join_an_event_after_it_has_been_ended() throws Exception {
 		// TO-DO
 	}
-
 
 	/**
 	 * Test 13 - Check messages contain expletives, part 1
@@ -210,5 +213,77 @@ public class EventControllerTest extends TestSetup {
 		message = new Message("user", "four");
 		assertThat(botservice.checkMessageLength(message), is(4));
 	}
+
+	/**
+	 * With an empty repository we should have its size set at 0 and active events should be 0
+	 * @throws Exception
+	 */
+	@Test
+	public void _active_events_counter_shows_0() throws Exception {
+		assertThat(eventRepo.findAll().size(), is(0));
+		assertThat(eventService.activeEvents(), is(0));
+	}
 	
+	/**
+	 * With 1 newly created & active event, repo should be 1 and active event count should be 1 and inactive event set to zero
+	 * @throws Exception
+	 */
+	@Test
+	public void _active_events_counter_shows_1() throws Exception {
+		Event e = new Event();
+		e.setAlive(true);
+		eventService.createEvent(e);
+		assertThat(eventRepo.findAll().size(), is(1));
+		assertThat(eventService.activeEvents(), is(1));
+		assertThat(eventService.inactiveEvents(), is(0));
+	}
+	
+	/**
+	 * A more extravagant/complex test probing the size/count
+	 * @throws Exception
+	 */
+	@Test
+	public void _active_events_counter_shows_high_number() throws Exception {
+		
+		Event e;
+		User u;
+		
+		// Create and add 20 event instances
+		for(int i = 0; i < 20; ++i) {
+			e = new Event();
+			u = new User();
+			u.setEmailAddress(String.valueOf(i+"...com"));
+			e.getUsers().add(u.getEmailAddress());
+			e.setAlive(true);
+			e.setId(String.valueOf(i));
+			eventService.createEvent(e);
+		}
+
+		assertThat(eventRepo.findAll().size(), is(20));
+		assertThat(eventService.activeEvents(), is(20));
+		
+		// Remove 5 events
+		for(int k = 5; k < 10; ++k)
+			eventRepo.delete(eventService.findEventById(String.valueOf(k)));
+		
+		assertThat(eventRepo.findAll().size(), is(15));
+		assertThat(eventService.activeEvents(), is(15));
+
+	}
+	
+	/**
+	 * With 1 newly created & inactive event, repo should be 1 and active event count should be 1
+	 * @throws Exception
+	 */
+	@Test
+	public void _inactive_events_counter_shows_1() throws Exception {
+		Event e = new Event();
+		e.setAlive(false);
+		eventService.createEvent(e);
+		assertThat(eventRepo.findAll().size(), is(1));
+		assertThat(eventService.activeEvents(), is(0));
+	}
+	
+	
+
 }

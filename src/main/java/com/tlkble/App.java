@@ -7,6 +7,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import com.tlkble.util.StopWordList;
+
 /** Main run file
  * @author Ben
  *
@@ -24,14 +26,7 @@ public class App {
     @Bean
     public CommandLineRunner administrators(ApplicationContext ctx) {
         return args -> {  
-        	
-        	/**================= 
-        	 * Run boot commands
-        	 * ==================
-        	 * 	mvn package -Dmaven.test.skip=true
-        	 *  SKIP MAVEN TESTS
-        	 */
-
+        	StopWordList.load_words_();
         };
     }
 }
